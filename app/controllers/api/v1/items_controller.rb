@@ -18,4 +18,9 @@ class Api::V1::ItemsController < ApplicationController
       render json: { error: 'Not Found' }, status: :not_found
     end
   end
+
+  def show
+    item = Item.find(params[:id])
+    render json: ItemSerializer.new(item)
+  end
 end
