@@ -29,7 +29,7 @@ RSpec.describe "items requests" do
       expect(all_items_response[:data][0][:attributes]).to_not have_key :updated_at
     end
 
-    it 'gets 20 items and page 1 by default' do
+    it "gets 20 items and page 1 by default" do
       merchant = create(:merchant)
       create_list(:item, 23, merchant: merchant)
 
@@ -43,7 +43,7 @@ RSpec.describe "items requests" do
       expect(items[:data].first[:id].to_i).to eq(Item.first.id)
     end
 
-    it 'can take per page and page number params' do
+    it "can take per page and page number params" do
       merchant = create(:merchant)
       create_list(:item, 23, merchant: merchant)
 
@@ -57,7 +57,7 @@ RSpec.describe "items requests" do
       expect(items[:data].first[:id].to_i).to eq(Item.offset(10).first.id)
     end
 
-    it 'gets page one if page number params are less that one or not an integer' do
+    it "gets page one if page number params are less that one or not an integer" do
       merchant = create(:merchant)
       create_list(:item, 23, merchant: merchant)
 
@@ -114,6 +114,13 @@ RSpec.describe "items requests" do
       expect(item_response[:data][:attributes]).to_not have_key :created_at
       expect(item_response[:data][:attributes]).to_not have_key :updated_at
     end
+
+    it "returns 404 error status if no item has that id" do
+      get "/api/v1/items/3"
+
+      expect(response).to_not be_successful
+      expect(response).to have_http_status(404)
+    end
   end
 
   describe "Post /api/v1/items" do
@@ -127,16 +134,59 @@ RSpec.describe "items requests" do
               }
       headers = {"CONTENT_TYPE" => "application/json"}
       post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+
       new_item = Item.last
-      output = JSON.parse(response.body, symbolize_names: true)[:data]
+      item_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to be_successful
-      expect(output[:attributes][:name]).to eq(item_params[:name])
+      expect(item_response[:data]).to have_key :id
+      expect(item_response[:data]).to have_key :type
+      expect(item_response[:data][:type]).to eq("item")
+      expect(item_response[:data]).to have_key :attributes
+      expect(item_response[:data][:attributes]).to have_key :name
+      expect(item_response[:data][:attributes][:name]).to be_a String
+      expect(item_response[:data][:attributes][:name]).to eq(item_params[:name])
       expect(new_item.name).to eq(item_params[:name])
-      expect(output[:attributes][:description]).to eq(item_params[:description])
+      expect(item_response[:data][:attributes]).to have_key :description
+      expect(item_response[:data][:attributes][:description]).to be_a String
+      expect(item_response[:data][:attributes][:description]).to eq(item_params[:description])
       expect(new_item.description).to eq(item_params[:description])
-      expect(output[:attributes][:unit_price]).to eq(item_params[:unit_price])
+      expect(item_response[:data][:attributes]).to have_key :unit_price
+      expect(item_response[:data][:attributes][:unit_price]).to be_a Float
+      expect(item_response[:data][:attributes][:unit_price]).to eq(item_params[:unit_price])
       expect(new_item.unit_price).to eq(item_params[:unit_price])
+      expect(item_response[:data][:attributes]).to have_key(:merchant_id)
+      expect(item_response[:data][:attributes][:merchant_id]).to be_an(Integer)
+    end
+
+    it "ignores extra attributes" do
+      merchant = create(:merchant)
+      item_params = {
+                      name: "Ida",
+                      description: "a human female chicken",
+                      unit_price: 12.21,
+                      merchant_id: merchant.id,
+                      extra_fun_stuff: "guillermo buillermo"
+                    }
+      headers = {"CONTENT_TYPE": "application/json"}
+      post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item[:data][:attributes]).to_not have_key(:dont_include)
+    end
+
+    it 'returns error if attributes are missing' do
+      merchant = create(:merchant)
+      item_params = {
+                      description: "a human female chicken",
+                      unit_price: 12.21,
+                      merchant_id: merchant.id,
+                    }
+      headers = {"CONTENT_TYPE": "application/json"}
+      post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+      
+      expect(response.status).to eq(400)
     end
   end
 
