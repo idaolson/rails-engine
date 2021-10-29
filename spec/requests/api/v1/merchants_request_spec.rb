@@ -139,4 +139,60 @@ RSpec.describe 'merchants requests' do
       expect(response.status).to eq(404)
     end
   end
+
+  describe 'Get /api/v1/merchants/find' do
+    it 'finds a single merchant by name' do
+      create(:merchant, name: "Guillermo Buillermo")
+      create(:merchant, name: "Cassio Olson")
+
+      query = "ssio"
+      get "/api/v1/merchants/find?name=#{query}"
+
+      expect(response).to be_successful
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data][:attributes][:name]).to eq("Cassio Olson")
+    end
+
+    it 'if multiple matches matches, returns in alphabetical order/case-sensitive' do
+      create(:merchant, name: "Guillermo")
+      create(:merchant, name: "Buillermo")
+      create(:merchant, name: "Cassio")
+
+      query = "iller"
+      get "/api/v1/merchants/find?name=#{query}"
+
+      expect(response).to be_successful
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data][:attributes][:name]).to eq("Buillermo")
+    end
+
+    it 'returns empty response if no match on name' do
+      create(:merchant, name: "Cassio")
+
+      query = "ermo"
+      get "/api/v1/merchants/find?name=#{query}"
+
+      empty = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(200)
+      expect(empty[:data]).to be_a(Hash)
+      expect(empty[:data][:id]).to eq(nil)
+    end
+
+    it 'returns 400 if no name or empty param' do
+      get "/api/v1/merchants/find"
+
+      expect(response.status).to eq(400)
+
+      get "/api/v1/merchants/find?name="
+      
+      expect(response.status).to eq(400)
+    end
+  end
 end
