@@ -20,8 +20,12 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def show
-    item = Item.find(params[:id])
-    render json: ItemSerializer.new(item)
+    if Item.exists?(params[:id])
+      item = Item.find(params[:id])
+      render json: ItemSerializer.new(item)
+    else
+      render json: { response: 'Not Found' }, status: :not_found
+    end
   end
 
   def create
