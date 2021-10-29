@@ -6,8 +6,8 @@ class Merchant < ApplicationRecord
   validates :name, presence: true
 
   def self.find_by_name(query)
-    Merchant.where('name ILIKE ?', "%#{query}%")
-            .order(name: :asc)
-            .first
+    where('name ILIKE ?', "%#{query}%")
+      .order(name: :asc)
+      .first
   end
 end
