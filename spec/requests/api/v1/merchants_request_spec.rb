@@ -23,6 +23,58 @@ RSpec.describe "merchants requests" do
       expect(all_merchants_response[:data][0][:attributes]).to_not have_key :created_at
       expect(all_merchants_response[:data][0][:attributes]).to_not have_key :updated_at
     end
+
+    it "can take per page and page number params" do
+      create_list(:merchant, 23)
+
+      get "/api/v1/merchants", params: { per_page: 10, page: 2 }
+
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(merchants.count).to eq(10)
+      expect(merchants.first[:id].to_i).to eq(Merchant.offset(10).first.id)
+    end
+
+    it "fetches 1 page if page param is < 1 or non-integer" do
+      create_list(:merchant, 23)
+
+      get "/api/v1/merchants", params: { page: 0 }
+
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchants[:data].count).to eq(20)
+      expect(merchants[:data].first).to have_key :id
+
+      get '/api/v1/merchants', params: { page: -5 }
+
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(merchants.count).to eq(20)
+
+      get '/api/v1/merchants', params: { page: 'page 8' }
+
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(merchants.count).to eq(20)
+    end
+
+    it "returns an empty array of data for 0 results" do
+      get "/api/v1/merchants"
+
+      expect(response).to be_successful
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchants[:data].count).to eq(0)
+      expect(merchants[:data]).to eq([])
+    end
   end
 
   describe "Get /api/v1/merchants/:id" do
@@ -45,6 +97,13 @@ RSpec.describe "merchants requests" do
       expect(merchant_response[:data][:attributes][:name]).to be_a String
       expect(merchant_response[:data][:attributes]).to_not have_key :created_at
       expect(merchant_response[:data][:attributes]).to_not have_key :updated_at
+    end
+
+    it "returns 404 if id doesn't exist" do
+      get "/api/v1/merchants/1"
+
+      expect(response).to_not be_successful
+      expect(response).to have_http_status(404)
     end
   end
 
@@ -72,6 +131,12 @@ RSpec.describe "merchants requests" do
       expect(merchant_items_response[:data][0][:attributes][:unit_price]).to be_a Float
       expect(merchant_items_response[:data][0][:attributes]).to_not have_key :created_at
       expect(merchant_items_response[:data][0][:attributes]).to_not have_key :updated_at
+    end
+
+    it "returns a 404 if merchant not found" do
+      get "/api/v1/merchants/90210/items"
+
+      expect(response.status).to eq(404)
     end
   end
 end
