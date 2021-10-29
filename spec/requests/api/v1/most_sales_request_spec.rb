@@ -37,13 +37,6 @@ RSpec.describe 'Get api/vi/merchants/most_items' do
     expect(merchants[:data].second[:attributes][:count]).to eq(15)
   end
 
-  it 'returns 400 error if there is no quantity param' do
-    get "/api/v1/merchants/most_items"
-
-    expect(response).to_not be_successful
-    expect(response.status).to eq(400)
-  end
-
   it 'returns 400 error if the quantity param is less than 1' do
     get '/api/v1/merchants/most_items?quantity=0'
 
