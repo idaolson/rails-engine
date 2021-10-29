@@ -55,6 +55,20 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
+  def find_all
+    if valid_find_all?
+      if params[:name]
+        item = Item.find_by_name(params[:name])
+        render json: ItemSerializer.new(item)
+      else
+        item = Item.find_by_price(params[:min_price], params[:max_price])
+        render json: ItemSerializer.new(item)
+      end
+    else
+      render json: { response: 'Bad Request' }, status: :bad_request
+    end
+  end
+
   private
 
   def item_params
@@ -65,5 +79,13 @@ class Api::V1::ItemsController < ApplicationController
     return false if item_params['merchant_id'] && !Merchant.exists?(item_params['merchant_id'].to_i)
 
     true
+  end
+
+  def valid_find_all?
+    return true if (params[:name] && params[:name] != '') && !params[:min_price] && !params[:max_price]
+    return true if !params[:name] && params[:min_price]
+    return true if !params[:name] && params[:max_price]
+
+    false
   end
 end
