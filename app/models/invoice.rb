@@ -4,8 +4,8 @@ class Invoice < ApplicationRecord
   has_many :invoice_items, dependent: :destroy
   has_many :items, through: :invoice_items
 
-  validates :status, :customer_id, :created_at, :updated_at, presence: true
+  validates :status, :customer_id, presence: true
 
   enum status: [:cancelled, "in progress", :completed]
 
-end 
+end
