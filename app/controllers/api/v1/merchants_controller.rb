@@ -34,10 +34,10 @@ class Api::V1::MerchantsController < ApplicationController
   def most_items_sold
     if !params[:quantity]
       merchants = Merchant.most_items
-      render json: MostSalesSerializer.new(merchants)
+      render json: ItemsSoldSerializer.new(merchants)
     elsif params[:quantity].to_i > 0
       merchants = Merchant.most_items(params[:quantity])
-      render json: MostSalesSerializer.new(merchants)
+      render json: ItemsSoldSerializer.new(merchants)
     else
       render json: { error: 'Bad Request' }, status: :bad_request
     end
