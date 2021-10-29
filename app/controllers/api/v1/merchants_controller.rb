@@ -1,7 +1,8 @@
 class Api::V1::MerchantsController < ApplicationController
   def index
-    per_page = params[:per_page].to_i ||= 20
-    page = params[:page].to_i ||= 1
+
+    per_page = params[:per_page].try(:to_i) || 20
+    page = params[:page].try(:to_i) || 1
 
     merchants = Merchant.all.page_number(per_page, page)
     render json: MerchantSerializer.new(merchants)
