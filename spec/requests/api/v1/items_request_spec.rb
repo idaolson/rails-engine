@@ -133,7 +133,7 @@ RSpec.describe "items requests" do
                 "merchant_id": merchant.id.to_i
               }
       headers = {"CONTENT_TYPE" => "application/json"}
-      post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
       new_item = Item.last
       item_response = JSON.parse(response.body, symbolize_names: true)
@@ -169,14 +169,14 @@ RSpec.describe "items requests" do
                       extra_fun_stuff: "guillermo buillermo"
                     }
       headers = {"CONTENT_TYPE": "application/json"}
-      post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
       item = JSON.parse(response.body, symbolize_names: true)
 
       expect(item[:data][:attributes]).to_not have_key(:dont_include)
     end
 
-    it 'returns error if attributes are missing' do
+    it "returns error if attributes are missing" do
       merchant = create(:merchant)
       item_params = {
                       description: "a human female chicken",
@@ -184,14 +184,58 @@ RSpec.describe "items requests" do
                       merchant_id: merchant.id,
                     }
       headers = {"CONTENT_TYPE": "application/json"}
-      post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
-      
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
       expect(response.status).to eq(400)
     end
   end
 
-  describe 'Delete /api/v1/items/:id' do
-    it 'destroys an item when it exists' do
+  describe "Post /api/v1/items" do
+    it "updates an item" do
+      merchant = create(:merchant)
+      merchant2 = create(:merchant)
+      item = create(:item, merchant: merchant)
+      previous_name = item.name
+      item_params = {
+                      "name": "Ida",
+                      "merchant_id": merchant2.id
+                    }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      patch "/api/v1/items/#{item.id}", headers: headers, params: JSON.generate({item: item_params})
+
+      updated_item = Item.find(item.id)
+
+      expect(response).to be_successful
+      expect(updated_item.name).to_not eq(previous_name)
+      expect(updated_item.name).to eq("Ida")
+    end
+
+    it "returns 404 if merchant id invalid" do
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant)
+      item_params = {
+                      "name": "Guillermo Buillermo",
+                      "merchant_id": 509391
+                    }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      patch "/api/v1/items/#{item.id}", headers: headers, params: JSON.generate({item: item_params})
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 if item to update doesn't exist" do
+      item_params = ({
+                "name": "Ida"
+              })
+      headers = {"CONTENT_TYPE" => "application/json"}
+      patch "/api/v1/items/143254", headers: headers, params: JSON.generate({item: item_params})
+
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "Delete /api/v1/items/:id" do
+    it "destroys an item" do
       merchant = create(:merchant)
       item = create(:item, merchant: merchant)
 
@@ -202,6 +246,42 @@ RSpec.describe "items requests" do
       expect(response).to be_successful
       expect(Item.count).to eq(0)
       expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'returns 404 if an item to be destroyed does not exist' do
+      delete '/api/v1/items/3'
+
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "Get /api/v1/items/:item_id/merchant" do
+    it "returns the merchant for an item" do
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant)
+
+      get "/api/v1/items/#{item.id}/merchant"
+
+      expect(response).to be_successful
+
+      merchant_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchant_response).to be_a Hash
+      expect(merchant_response[:data]).to be_a Hash
+      expect(merchant_response[:data]).to have_key :id
+      expect(merchant_response[:data]).to have_key :type
+      expect(merchant_response[:data][:type]).to eq("merchant")
+      expect(merchant_response[:data]).to have_key :attributes
+      expect(merchant_response[:data][:attributes]).to have_key :name
+      expect(merchant_response[:data][:attributes][:name]).to be_a String
+      expect(merchant_response[:data][:attributes]).to_not have_key :created_at
+      expect(merchant_response[:data][:attributes]).to_not have_key :updated_at
+    end
+
+    it "returns a 404 if the item doesn't exist" do
+      get "/api/v1/items/456788/merchant"
+
+      expect(response.status).to eq(404)
     end
   end
 end
