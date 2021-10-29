@@ -46,7 +46,6 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
-
   def destroy
     if Item.exists?(params[:id])
       Item.delete(params[:id])
@@ -64,6 +63,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def valid_merchant?
     return false if item_params['merchant_id'] && !Merchant.exists?(item_params['merchant_id'].to_i)
-    return true
+
+    true
   end
 end

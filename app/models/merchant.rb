@@ -9,5 +9,5 @@ class Merchant < ApplicationRecord
     Merchant.where('name ILIKE ?', "%#{query}%")
             .order(name: :asc)
             .first
-    end
+  end
 end

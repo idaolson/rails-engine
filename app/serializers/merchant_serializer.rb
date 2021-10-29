@@ -8,8 +8,6 @@ class MerchantSerializer
       { "id": nil,
         "type": 'merchant',
         "attributes":
-         { "name": nil }
-      }
-    }
-  end 
+         { "name": nil } } }
+  end
 end
