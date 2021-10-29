@@ -19,4 +19,14 @@ class Api::V1::RevenueController < ApplicationController
       render json: { error: 'Not Found' }, status: :not_found
     end
   end
+
+  def most_revenue_merchants
+    quantity = params[:quantity].to_i
+    if quantity > 0
+      merchants = Merchant.most_revenue(quantity)
+      render json: MerchantNameRevenueSerializer.new(merchants)
+    else
+      render json: { error: 'Bad Request' }, status: :bad_request
+    end
+  end
 end
