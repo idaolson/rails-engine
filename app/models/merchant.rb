@@ -23,10 +23,19 @@ class Merchant < ApplicationRecord
   end
 
   def self.total_revenue(merchant_id)
-    joins(items: {invoice_items: {invoice: :transactions}})
-      .select("merchants.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
-      .where("transactions.result = ? AND merchants.id = ?", "success", merchant_id)
-      .group("merchants.id")
+    joins(items: { invoice_items: { invoice: :transactions } })
+      .select('merchants.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue')
+      .where('transactions.result = ? AND merchants.id = ?', 'success', merchant_id)
+      .group('merchants.id')
       .first
+  end
+
+  def self.most_revenue(quantity)
+    joins(items: { invoice_items: { invoice: :transactions } })
+      .select('merchants.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue')
+      .where('transactions.result = ?', 'success')
+      .group('merchants.id')
+      .order('revenue desc')
+      .limit(quantity)
   end
 end
