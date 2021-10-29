@@ -142,10 +142,10 @@ RSpec.describe 'merchants requests' do
 
   describe 'Get /api/v1/merchants/find' do
     it 'finds a single merchant by name' do
-      create(:merchant, name: "Guillermo Buillermo")
-      create(:merchant, name: "Cassio Olson")
+      create(:merchant, name: 'Guillermo Buillermo')
+      create(:merchant, name: 'Cassio Olson')
 
-      query = "ssio"
+      query = 'ssio'
       get "/api/v1/merchants/find?name=#{query}"
 
       expect(response).to be_successful
@@ -153,15 +153,15 @@ RSpec.describe 'merchants requests' do
       merchant = JSON.parse(response.body, symbolize_names: true)
 
       expect(merchant[:data]).to be_a(Hash)
-      expect(merchant[:data][:attributes][:name]).to eq("Cassio Olson")
+      expect(merchant[:data][:attributes][:name]).to eq('Cassio Olson')
     end
 
     it 'if multiple matches matches, returns in alphabetical order/case-sensitive' do
-      create(:merchant, name: "Guillermo")
-      create(:merchant, name: "Buillermo")
-      create(:merchant, name: "Cassio")
+      create(:merchant, name: 'Guillermo')
+      create(:merchant, name: 'Buillermo')
+      create(:merchant, name: 'Cassio')
 
-      query = "iller"
+      query = 'iller'
       get "/api/v1/merchants/find?name=#{query}"
 
       expect(response).to be_successful
@@ -169,13 +169,13 @@ RSpec.describe 'merchants requests' do
       merchant = JSON.parse(response.body, symbolize_names: true)
 
       expect(merchant[:data]).to be_a(Hash)
-      expect(merchant[:data][:attributes][:name]).to eq("Buillermo")
+      expect(merchant[:data][:attributes][:name]).to eq('Buillermo')
     end
 
     it 'returns empty response if no match on name' do
-      create(:merchant, name: "Cassio")
+      create(:merchant, name: 'Cassio')
 
-      query = "ermo"
+      query = 'ermo'
       get "/api/v1/merchants/find?name=#{query}"
 
       empty = JSON.parse(response.body, symbolize_names: true)
@@ -186,12 +186,12 @@ RSpec.describe 'merchants requests' do
     end
 
     it 'returns 400 if no name or empty param' do
-      get "/api/v1/merchants/find"
+      get '/api/v1/merchants/find'
 
       expect(response.status).to eq(400)
 
-      get "/api/v1/merchants/find?name="
-      
+      get '/api/v1/merchants/find?name='
+
       expect(response.status).to eq(400)
     end
   end

@@ -288,12 +288,12 @@ RSpec.describe 'items requests' do
   describe 'Get /api/v1/items/find_all' do
     it 'returns matches alphabetical by name' do
       merchant = create(:merchant)
-      create(:item, name: "Cassio", merchant: merchant)
-      create(:item, name: "Chibi", merchant: merchant)
-      create(:item, name: "Bianca", merchant: merchant)
-      create(:item, name: "Maisy", merchant: merchant)
+      create(:item, name: 'Cassio', merchant: merchant)
+      create(:item, name: 'Chibi', merchant: merchant)
+      create(:item, name: 'Bianca', merchant: merchant)
+      create(:item, name: 'Maisy', merchant: merchant)
 
-      query = "bi"
+      query = 'bi'
       get "/api/v1/items/find_all?name=#{query}"
 
       expect(response).to be_successful
@@ -302,15 +302,15 @@ RSpec.describe 'items requests' do
 
       expect(items[:data]).to be_an Array
       expect(items[:data].count).to eq(2)
-      expect(items[:data].first[:attributes][:name]).to eq("Bianca")
-      expect(items[:data].second[:attributes][:name]).to eq("Chibi")
+      expect(items[:data].first[:attributes][:name]).to eq('Bianca')
+      expect(items[:data].second[:attributes][:name]).to eq('Chibi')
     end
 
     it 'returns empty array if no match' do
       merchant = create(:merchant)
-      create(:item, name: "Cassio", merchant: merchant)
+      create(:item, name: 'Cassio', merchant: merchant)
 
-      query = "bi"
+      query = 'bi'
       get "/api/v1/items/find_all?name=#{query}"
 
       expect(response).to be_successful
@@ -363,7 +363,7 @@ RSpec.describe 'items requests' do
 
       get "/api/v1/items/find_all?min_price=#{min}&max_price=#{max}"
 
-        expect(response).to be_successful
+      expect(response).to be_successful
 
       items = JSON.parse(response.body, symbolize_names: true)
 
@@ -376,19 +376,19 @@ RSpec.describe 'items requests' do
     it 'cannot search for items by min/max price && name' do
       min = 5
       max = 10
-      query = "cassio"
+      query = 'cassio'
 
       get "/api/v1/items/find_all?name=#{query}&min_price=#{min}&max_price=#{max}"
-      
+
       expect(response.status).to eq(400)
     end
 
     it 'returns 400 if no search params entered or empty params' do
-      get "/api/v1/items/find_all"
+      get '/api/v1/items/find_all'
 
       expect(response.status).to eq(400)
 
-      get "/api/v1/items/find_all?name="
+      get '/api/v1/items/find_all?name='
 
       expect(response.status).to eq(400)
     end
