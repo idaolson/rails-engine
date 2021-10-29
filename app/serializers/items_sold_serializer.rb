@@ -1,4 +1,4 @@
-class MostSalesSerializer
+class ItemsSoldSerializer
   include JSONAPI::Serializer
 
   attributes :name, :count
