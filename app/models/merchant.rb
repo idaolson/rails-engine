@@ -14,11 +14,11 @@ class Merchant < ApplicationRecord
   end
 
   def self.most_items(quantity = 5)
-    joins(items: {invoice_items: {invoice: :transactions}})
-    .select("merchants.*, SUM(invoice_items.quantity) AS count")
-    .where("transactions.result = ?", "success")
-    .group("merchants.id")
-    .order("count desc")
-    .limit(quantity)
+    joins(items: { invoice_items: { invoice: :transactions } })
+      .select('merchants.*, SUM(invoice_items.quantity) AS count')
+      .where('transactions.result = ?', 'success')
+      .group('merchants.id')
+      .order('count desc')
+      .limit(quantity)
   end
 end
