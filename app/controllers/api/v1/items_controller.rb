@@ -59,11 +59,10 @@ class Api::V1::ItemsController < ApplicationController
     if valid_find_all?
       if params[:name]
         item = Item.find_by_name(params[:name])
-        render json: ItemSerializer.new(item)
       else
         item = Item.find_by_price(params[:min_price], params[:max_price])
-        render json: ItemSerializer.new(item)
       end
+        render json: ItemSerializer.new(item)
     else
       render json: { response: 'Bad Request' }, status: :bad_request
     end
