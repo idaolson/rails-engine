@@ -4,4 +4,10 @@ class Merchant < ApplicationRecord
   # has_many :invoice_items, through: :items
 
   validates :name, presence: true
+
+  def self.find_by_name(query)
+    where('name ILIKE ?', "%#{query}%")
+      .order(name: :asc)
+      .first
+  end
 end
