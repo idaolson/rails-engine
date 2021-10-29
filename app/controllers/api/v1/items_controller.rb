@@ -3,9 +3,9 @@ class Api::V1::ItemsController < ApplicationController
     if params[:merchant_id]
       merchant_items_index(params[:merchant_id])
     else
-      per_page = 20
-      page = 1
-      items = Item.all.paginate(per_page, page)
+      per_page = params[:per_page].try(:to_i) || 20
+      page = params[:page].try(:to_i) || 1
+      items = Item.all.page_number(per_page, page)
       render json: ItemSerializer.new(items)
     end
   end
@@ -33,6 +33,16 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
+  def update
+    if Item.exists?(params[:id]) && valid_merchant?
+      @item = Item.update(params[:id], item_params)
+      render json: ItemSerializer.new(@item)
+    else
+      render json: { response: 'Not Found' }, status: :not_found
+    end
+  end
+
+
   def destroy
     if Item.exists?(params[:id])
       Item.delete(params[:id])
@@ -41,10 +51,15 @@ class Api::V1::ItemsController < ApplicationController
       render json: { response: 'Not Found' }, status: :not_found
     end
   end
-  
+
   private
 
   def item_params
     params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
+  end
+
+  def valid_merchant?
+    return false if item_params['merchant_id'] && !Merchant.exists?(item_params['merchant_id'].to_i)
+    return true
   end
 end
