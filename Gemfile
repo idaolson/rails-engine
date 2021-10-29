@@ -29,6 +29,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # gem 'rack-cors'
 
 gem 'jsonapi-serializer'
+gem 'database_cleaner'
 gem 'pry'
 gem 'rubocop-rails', require: false
 
@@ -49,6 +50,8 @@ end
 
 group :test do
   gem 'simplecov'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
