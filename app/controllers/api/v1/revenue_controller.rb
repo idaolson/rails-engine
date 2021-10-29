@@ -10,4 +10,13 @@ class Api::V1::RevenueController < ApplicationController
       render json: { error: 'Bad Request' }, status: :bad_request
     end
   end
+
+  def total_revenue_merchant
+    if Merchant.find_by(id: params[:id])
+      merchant = Merchant.total_revenue(params[:id])
+      render json: MerchantRevenueSerializer.new(merchant)
+    else
+      render json: { error: 'Not Found' }, status: :not_found
+    end
+  end
 end
