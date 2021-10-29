@@ -30,11 +30,20 @@ RSpec.describe 'Get api/vi/merchants/most_items' do
     expect(response).to be_successful
 
     merchants = JSON.parse(response.body, symbolize_names: true)
+
     expect(merchants[:data].count).to eq(2)
     expect(merchants[:data].first[:id].to_i).to eq(merchant2.id)
     expect(merchants[:data].first[:attributes][:count]).to eq(90)
     expect(merchants[:data].second[:id].to_i).to eq(merchant1.id)
     expect(merchants[:data].second[:attributes][:count]).to eq(15)
+
+    get '/api/v1/merchants/most_items'
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
+
+    expect(merchants[:data].count).to eq(2)
   end
 
   it 'returns 400 error if the quantity param is less than 1' do
