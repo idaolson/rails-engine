@@ -71,7 +71,7 @@
 | :-------------:| :-------------------:|
 | Ruby 2.7.2     | SimpleCov            |
 | Rails 5.2.6    | Pry                  |
-| Atom           | Launchy              |
+| PostgreSQL     | Launchy              |
 | Git            | RSpec                |
 | Github         | Factorybot/Faker     |
 | Github Project | Postman              |
