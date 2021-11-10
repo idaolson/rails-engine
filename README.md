@@ -40,7 +40,7 @@
 * Clone your fork
 * From the command line, install gems and set up your DB:
     * `bundle install`
-    * `rails db:{drop,create,migrate, seed}`
+    * `rails db:{drop,create,migrate,seed}`
     * `rails db:schema:dump`
 * Run the test suite with `bundle exec rspec`.
 * Run your development server with `rails s` to see the API app in action.
