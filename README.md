@@ -67,15 +67,15 @@
 
 ## Tools Used
 
-| Development    |  Testing             |
-| :-------------:| :-------------------:|
-| Ruby 2.7.2     | SimpleCov            |
-| Rails 5.2.6    | Pry                  |
-| PostgreSQL     | Launchy              |
-| Git            | RSpec                |
-| Github         | Factorybot/Faker     |
-| Github Project | Postman              |
-| Postico        |                      |
+| Development     |  Testing             |
+| :--------------:| :-------------------:|
+| Ruby 2.7.2      | SimpleCov            |
+| Rails 5.2.6     | Pry                  |
+| PostgreSQL      | Launchy              |
+| Git             | RSpec                |
+| GitHub          | Factorybot/Faker     |
+| GitHub Projects | Postman              |
+| Postico         |                      |
 
 
 ## Contributors
