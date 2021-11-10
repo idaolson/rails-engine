@@ -1,6 +1,6 @@
 # README
 
-# rails-engine 
+# Rails Engine
 
 ## Table of contents
 * [Description](#description)
