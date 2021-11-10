@@ -4,7 +4,7 @@
 
 ## Table of contents
 * [Description](#description)
-* [Learning Goals](#learning-goals)
+* [Goals](#goals)
 * [Requirements](#requirements)
 * [Database Schema](#database-schema)
 * [API Endpoints](#api-endpoints)
@@ -16,9 +16,9 @@
 
 "Rails Engine" is a Rails-based API which mimics an e-commerce platform (based on [Little Esty Shop Repo](https://github.com/idaolson/little-esty-shop-bulk-discounts) reporting tool as an API. Users can query and store merchants and items, and retrieve information about an item's merchant, or a list of a merchant's items. Users can also run one of several "business intelligence" endpoints to do rich reporting using ActiveRecord queries.
 
-## Learning Goals
-- Practice building both RESTful and non-RESTful API endpoints.
-- Practice using serializer.
+## Goals
+- Build both RESTful and non-RESTful API endpoints.
+- Use a serializer.
 - Utilize Postman
 - Utilize advanced ActiveRecord techniques to perform complex database queries.
 
