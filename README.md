@@ -6,8 +6,8 @@
 * [Description](#description)
 * [Goals](#goals)
 * [Requirements](#requirements)
-* [Database Schema](#database-schema)
 * [API Endpoints](#api-endpoints)
+* [Database Schema](#database-schema)
 * [Setup](#setup)
 * [Tools Used](#tools-used)
 * [Contributors](#contributors)
@@ -28,9 +28,6 @@
 - PostgreSQL
 - JSONAPI::Serializer
 - Postman
-
-## Database Schema
-![Schema](https://user-images.githubusercontent.com/72399033/134418403-99e1a24c-11fb-442c-a682-01e86095ba7d.png)
 
 ## API Endpoints
 
@@ -54,6 +51,9 @@
 | GET      | /api/v1/revenue/items?quantity=number                     | Get x amount of items by most revenue                |
 | GET      | /api/v1/revenue/merchants/id                              | Get revenue for a merchant by id                     |
 | GET      | /api/v1/revenue/items                                     | Get top ten items by revenue                         |
+
+## Database Schema
+![Schema](https://user-images.githubusercontent.com/72399033/134418403-99e1a24c-11fb-442c-a682-01e86095ba7d.png)
 
 ## Setup
 * Fork this repository
