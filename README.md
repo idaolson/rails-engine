@@ -34,3 +34,33 @@
 ![Schema](https://user-images.githubusercontent.com/72399033/134418403-99e1a24c-11fb-442c-a682-01e86095ba7d.png)
 
 ## API Endpoints
+
+## Setup
+* Fork this repository
+* Clone your fork
+* From the command line, install gems and set up your DB:
+    * `bundle install`
+    * `rails db:{drop,create,migrate, seed}`
+    * `rails db:schema:dump`
+* Run the test suite with `bundle exec rspec`.
+* Run your development server with `rails s` to see the API app in action.
+
+## Live App
+[Link to Heroku deployment](https://rails-engine-denver.herokuapp.com/api/v1)
+
+## Tools Used
+
+| Development    |  Testing             |
+| :-------------:| :-------------------:|
+| Ruby 2.7.2     | SimpleCov            |
+| Rails 5.2.6    | Pry                  |
+| Atom           | Launchy              |
+| Git            | RSpec                |
+| Github         | Factorybot/Faker     |
+| Github Project | Postman              |
+| Postico        |                      |
+
+
+## Contributors
+
+- [Ida Olson](https://www.linkedin.com/in/idaolson/)
